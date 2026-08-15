@@ -15,14 +15,30 @@ public class MongoDBConnection {
     private final MongoClient mongoClient;
 
     public MongoDBConnection() {
+
         mongoClient = MongoClients.create(URI);
+
+        System.out.println(
+                "MongoDB connection created."
+        );
     }
 
     public MongoDatabase getDatabase() {
-        return mongoClient.getDatabase(DATABASE_NAME);
+
+        return mongoClient.getDatabase(
+                DATABASE_NAME
+        );
     }
 
     public void close() {
-        mongoClient.close();
+
+        if (mongoClient != null) {
+
+            mongoClient.close();
+
+            System.out.println(
+                    "MongoDB connection closed."
+            );
+        }
     }
 }

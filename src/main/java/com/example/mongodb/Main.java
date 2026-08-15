@@ -4,27 +4,45 @@ import com.example.mongodb.config.MongoDBConnection;
 import com.example.mongodb.dao.OrderDAO;
 import com.example.mongodb.ui.OrderManagementUI;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(
+            String[] args
+    ) {
 
         MongoDBConnection connection =
                 new MongoDBConnection();
 
+
         OrderDAO orderDAO =
-                new OrderDAO(connection);
+                new OrderDAO(
+                        connection
+                );
 
 
-        SwingUtilities.invokeLater(() -> {
+        Runtime.getRuntime()
+                .addShutdownHook(
+                        new Thread(
+                                connection::close
+                        )
+                );
 
-            OrderManagementUI ui =
-                    new OrderManagementUI(
-                            orderDAO
+
+        SwingUtilities.invokeLater(
+                () -> {
+
+                    OrderManagementUI ui =
+                            new OrderManagementUI(
+                                    orderDAO
+                            );
+
+
+                    ui.setVisible(
+                            true
                     );
-
-            ui.setVisible(true);
-        });
+                }
+        );
     }
 }

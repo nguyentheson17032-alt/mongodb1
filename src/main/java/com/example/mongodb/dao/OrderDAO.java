@@ -14,68 +14,150 @@ public class OrderDAO {
 
     private final MongoCollection<Document> collection;
 
-    public OrderDAO(MongoDBConnection connection) {
+
+    public OrderDAO(
+            MongoDBConnection connection
+    ) {
 
         MongoDatabase database =
                 connection.getDatabase();
 
         collection =
-                database.getCollection("OrderCollection");
+                database.getCollection(
+                        "OrderCollection"
+                );
     }
 
-    // Clear all orders
-    public void clearCollection() {
 
-        collection.deleteMany(new Document());
+    // =========================================================
+    // CHECK ORDER EXISTS
+    // =========================================================
+
+    public boolean orderExists(
+            int orderId
+    ) {
+
+        return collection.countDocuments(
+                Filters.eq(
+                        "orderId",
+                        orderId
+                )
+        ) > 0;
     }
 
-    // Insert many orders
-    public void insertMany(List<Document> orders) {
 
-        collection.insertMany(orders);
+    // =========================================================
+    // INSERT MANY DOCUMENTS
+    // =========================================================
+
+    public void insertMany(
+            List<Document> orders
+    ) {
+
+        collection.insertMany(
+                orders
+        );
     }
 
-    // Update delivery address
+
+    // =========================================================
+    // READ ALL ORDERS
+    // =========================================================
+
+    public List<Document> findAll() {
+
+        return collection
+                .find()
+                .into(
+                        new ArrayList<>()
+                );
+    }
+
+
+    // =========================================================
+    // UPDATE DELIVERY ADDRESS
+    // =========================================================
+
     public boolean updateDeliveryAddress(
             int orderId,
             String newAddress
     ) {
 
-        var result = collection.updateOne(
-                Filters.eq("orderId", orderId),
-                Updates.set(
-                        "delivery_address",
-                        newAddress
-                )
+        var result =
+                collection.updateOne(
+                        Filters.eq(
+                                "orderId",
+                                orderId
+                        ),
+                        Updates.set(
+                                "delivery_address",
+                                newAddress
+                        )
+                );
+
+
+        System.out.println(
+                "Update orderId = "
+                        + orderId
         );
 
-        return result.getModifiedCount() > 0;
+        System.out.println(
+                "Matched: "
+                        + result.getMatchedCount()
+        );
+
+        System.out.println(
+                "Modified: "
+                        + result.getModifiedCount()
+        );
+
+
+        return result.getMatchedCount() > 0;
     }
 
-    // Delete order
-    public boolean deleteOrder(int orderId) {
 
-        var result = collection.deleteOne(
-                Filters.eq("orderId", orderId)
+    // =========================================================
+    // DELETE ORDER
+    // =========================================================
+
+    public boolean deleteOrder(
+            int orderId
+    ) {
+
+        var result =
+                collection.deleteOne(
+                        Filters.eq(
+                                "orderId",
+                                orderId
+                        )
+                );
+
+
+        System.out.println(
+                "Delete orderId = "
+                        + orderId
         );
+
+        System.out.println(
+                "Deleted: "
+                        + result.getDeletedCount()
+        );
+
 
         return result.getDeletedCount() > 0;
     }
 
-    // Get all orders
-    public List<Document> findAll() {
 
-        return collection
-                .find()
-                .into(new ArrayList<>());
-    }
+    // =========================================================
+    // CALCULATE TOTAL AMOUNT
+    // =========================================================
 
-    // Calculate total amount of one order
     public double calculateTotalAmount(
             Document order
     ) {
 
-        double totalAmount = 0;
+        double total = 0;
+
 
         List<Document> products =
                 order.getList(
@@ -83,31 +165,76 @@ public class OrderDAO {
                         Document.class
                 );
 
+
         if (products == null) {
+
             return 0;
         }
 
-        for (Document product : products) {
+
+        for (
+                Document product :
+                products
+        ) {
+
+            Number priceNumber =
+                    product.get(
+                            "price",
+                            Number.class
+                    );
+
+
+            Number quantityNumber =
+                    product.get(
+                            "quantity",
+                            Number.class
+                    );
+
+
+            if (
+                    priceNumber == null
+                            ||
+                            quantityNumber == null
+            ) {
+
+                continue;
+            }
+
 
             double price =
-                    product.getDouble("price");
+                    priceNumber.doubleValue();
+
 
             int quantity =
-                    product.getInteger("quantity");
+                    quantityNumber.intValue();
 
-            totalAmount +=
+
+            total +=
                     price * quantity;
         }
 
-        return totalAmount;
+
+        return total;
     }
 
-    // Calculate total quantity of product_id = somi
-    public int calculateTotalSomi() {
+
+    // =========================================================
+    // COUNT PRODUCT ID = SOMI
+    // =========================================================
+
+    public int countSomi() {
 
         int totalQuantity = 0;
 
-        for (Document order : collection.find()) {
+
+        List<Document> orders =
+                findAll();
+
+
+        for (
+                Document order :
+                orders
+        ) {
 
             List<Document> products =
                     order.getList(
@@ -115,24 +242,48 @@ public class OrderDAO {
                             Document.class
                     );
 
+
             if (products == null) {
+
                 continue;
             }
 
-            for (Document product : products) {
+
+            for (
+                    Document product :
+                    products
+            ) {
 
                 String productId =
-                        product.getString("product_id");
+                        product.getString(
+                                "product_id"
+                        );
 
-                if ("somi".equals(productId)) {
 
-                    int quantity =
-                            product.getInteger("quantity");
+                if (
+                        "somi".equals(
+                                productId
+                        )
+                ) {
 
-                    totalQuantity += quantity;
+                    Number quantityNumber =
+                            product.get(
+                                    "quantity",
+                                    Number.class
+                            );
+
+
+                    if (
+                            quantityNumber != null
+                    ) {
+
+                        totalQuantity +=
+                                quantityNumber.intValue();
+                    }
                 }
             }
         }
+
 
         return totalQuantity;
     }

@@ -9,47 +9,101 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class OrderManagementUI extends JFrame {
+public class OrderManagementUI
+        extends JFrame {
+
 
     private final OrderDAO orderDAO;
 
+
     private JTextField txtOrderId;
+
     private JTextField txtAddress;
 
+
     private JTable table;
+
     private DefaultTableModel tableModel;
+
 
     private JLabel lblStatus;
 
-    public OrderManagementUI(OrderDAO orderDAO) {
+
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
+
+    public OrderManagementUI(
+            OrderDAO orderDAO
+    ) {
 
         this.orderDAO = orderDAO;
 
-        initializeUI();
+        createGUI();
     }
 
-    private void initializeUI() {
 
-        setTitle("E-Shop - Order Management");
+    // =========================================================
+    // CREATE GUI
+    // =========================================================
 
-        setSize(1000, 650);
+    private void createGUI() {
 
-        setLocationRelativeTo(null);
-
-        setDefaultCloseOperation(
-                JFrame.EXIT_ON_CLOSE
+        setTitle(
+                "E-Shop Order Management"
         );
 
-        setLayout(new BorderLayout(10, 10));
+
+        setSize(
+                950,
+                650
+        );
+
+
+        setLocationRelativeTo(
+                null
+        );
+
+
+        setDefaultCloseOperation(
+                JFrame.DISPOSE_ON_CLOSE
+        );
+
+
+        setLayout(
+                new BorderLayout(
+                        10,
+                        10
+                )
+        );
+
 
         // =====================================================
-        // TOP PANEL
+        // TOP AREA
+        // =====================================================
+
+        JPanel topPanel =
+                new JPanel(
+                        new BorderLayout(
+                                5,
+                                5
+                        )
+                );
+
+
+        // =====================================================
+        // INPUT PANEL
         // =====================================================
 
         JPanel inputPanel =
                 new JPanel(
-                        new GridBagLayout()
+                        new FlowLayout(
+                                FlowLayout.CENTER,
+                                15,
+                                10
+                        )
                 );
+
 
         inputPanel.setBorder(
                 BorderFactory.createTitledBorder(
@@ -57,60 +111,44 @@ public class OrderManagementUI extends JFrame {
                 )
         );
 
-        GridBagConstraints gbc =
-                new GridBagConstraints();
-
-        gbc.insets =
-                new Insets(5, 5, 5, 5);
-
-        gbc.fill =
-                GridBagConstraints.HORIZONTAL;
-
-
-        // Order ID
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
 
         inputPanel.add(
-                new JLabel("Order ID:"),
-                gbc
+                new JLabel(
+                        "Order ID:"
+                )
         );
 
 
         txtOrderId =
-                new JTextField(10);
+                new JTextField(
+                        8
+                );
 
-        gbc.gridx = 1;
 
         inputPanel.add(
-                txtOrderId,
-                gbc
+                txtOrderId
         );
 
 
-        // Address
-
-        gbc.gridx = 2;
-
         inputPanel.add(
-                new JLabel("Delivery Address:"),
-                gbc
+                new JLabel(
+                        "New Delivery Address:"
+                )
         );
 
 
         txtAddress =
-                new JTextField(20);
+                new JTextField(
+                        20
+                );
 
-        gbc.gridx = 3;
 
         inputPanel.add(
-                txtAddress,
-                gbc
+                txtAddress
         );
 
 
-        add(
+        topPanel.add(
                 inputPanel,
                 BorderLayout.NORTH
         );
@@ -122,8 +160,13 @@ public class OrderManagementUI extends JFrame {
 
         JPanel buttonPanel =
                 new JPanel(
-                        new GridLayout(2, 4, 10, 10)
+                        new FlowLayout(
+                                FlowLayout.CENTER,
+                                10,
+                                10
+                        )
                 );
+
 
         buttonPanel.setBorder(
                 BorderFactory.createTitledBorder(
@@ -134,69 +177,115 @@ public class OrderManagementUI extends JFrame {
 
         JButton btnInsert =
                 new JButton(
-                        "Insert Orders"
+                        "Insert Many"
                 );
+
 
         JButton btnUpdate =
                 new JButton(
-                        "Update Address"
+                        "Edit Address"
                 );
+
 
         JButton btnDelete =
                 new JButton(
-                        "Delete Order"
+                        "Remove Order"
                 );
+
 
         JButton btnRead =
                 new JButton(
-                        "Read All Orders"
+                        "Read Orders"
                 );
+
 
         JButton btnCalculate =
                 new JButton(
                         "Calculate Total"
                 );
 
+
         JButton btnSomi =
                 new JButton(
-                        "Find SOMI"
-                );
-
-        JButton btnClear =
-                new JButton(
-                        "Clear Collection"
-                );
-
-        JButton btnExit =
-                new JButton(
-                        "Exit"
+                        "Count SOMI"
                 );
 
 
-        buttonPanel.add(btnInsert);
-
-        buttonPanel.add(btnUpdate);
-
-        buttonPanel.add(btnDelete);
-
-        buttonPanel.add(btnRead);
-
-        buttonPanel.add(btnCalculate);
-
-        buttonPanel.add(btnSomi);
-
-        buttonPanel.add(btnClear);
-
-        buttonPanel.add(btnExit);
-
-
-        JPanel centerPanel =
-                new JPanel(
-                        new BorderLayout(10, 10)
+        Dimension buttonSize =
+                new Dimension(
+                        130,
+                        40
                 );
 
-        centerPanel.add(
+
+        btnInsert.setPreferredSize(
+                buttonSize
+        );
+
+
+        btnUpdate.setPreferredSize(
+                buttonSize
+        );
+
+
+        btnDelete.setPreferredSize(
+                buttonSize
+        );
+
+
+        btnRead.setPreferredSize(
+                buttonSize
+        );
+
+
+        btnCalculate.setPreferredSize(
+                buttonSize
+        );
+
+
+        btnSomi.setPreferredSize(
+                buttonSize
+        );
+
+
+        buttonPanel.add(
+                btnInsert
+        );
+
+
+        buttonPanel.add(
+                btnUpdate
+        );
+
+
+        buttonPanel.add(
+                btnDelete
+        );
+
+
+        buttonPanel.add(
+                btnRead
+        );
+
+
+        buttonPanel.add(
+                btnCalculate
+        );
+
+
+        buttonPanel.add(
+                btnSomi
+        );
+
+
+        topPanel.add(
                 buttonPanel,
+                BorderLayout.CENTER
+        );
+
+
+        add(
+                topPanel,
                 BorderLayout.NORTH
         );
 
@@ -206,13 +295,15 @@ public class OrderManagementUI extends JFrame {
         // =====================================================
 
         String[] columns = {
+
                 "No",
-                "Order ID",
-                "Product ID",
+
                 "Product Name",
-                "Size",
+
                 "Price",
+
                 "Quantity",
+
                 "Total"
         };
 
@@ -228,32 +319,44 @@ public class OrderManagementUI extends JFrame {
                             int row,
                             int column
                     ) {
+
                         return false;
                     }
                 };
 
 
         table =
-                new JTable(tableModel);
+                new JTable(
+                        tableModel
+                );
 
-        table.setRowHeight(25);
+
+        table.setRowHeight(
+                28
+        );
+
 
         table.getTableHeader()
-                .setReorderingAllowed(false);
+                .setReorderingAllowed(
+                        false
+                );
 
 
         JScrollPane scrollPane =
-                new JScrollPane(table);
+                new JScrollPane(
+                        table
+                );
 
 
-        centerPanel.add(
-                scrollPane,
-                BorderLayout.CENTER
+        scrollPane.setBorder(
+                BorderFactory.createTitledBorder(
+                        "OrderCollection"
+                )
         );
 
 
         add(
-                centerPanel,
+                scrollPane,
                 BorderLayout.CENTER
         );
 
@@ -266,6 +369,7 @@ public class OrderManagementUI extends JFrame {
                 new JLabel(
                         "Status: Ready"
                 );
+
 
         lblStatus.setBorder(
                 BorderFactory.createEmptyBorder(
@@ -288,72 +392,41 @@ public class OrderManagementUI extends JFrame {
         // =====================================================
 
         btnInsert.addActionListener(
-                e -> insertOrders()
+                e -> insertMany()
         );
+
 
         btnUpdate.addActionListener(
                 e -> updateAddress()
         );
 
+
         btnDelete.addActionListener(
-                e -> deleteOrder()
+                e -> removeOrder()
         );
 
+
         btnRead.addActionListener(
-                e -> readAllOrders()
+                e -> readOrders()
         );
+
 
         btnCalculate.addActionListener(
                 e -> calculateTotal()
         );
 
+
         btnSomi.addActionListener(
-                e -> calculateSomi()
-        );
-
-        btnClear.addActionListener(
-                e -> clearCollection()
-        );
-
-        btnExit.addActionListener(
-                e -> exitApplication()
+                e -> countSomi()
         );
     }
 
 
     // =========================================================
-    // INSERT
+    // CREATE SAMPLE DOCUMENT
     // =========================================================
 
-    private void insertOrders() {
-
-        try {
-
-            List<Document> orders =
-                    createSampleOrders();
-
-            orderDAO.clearCollection();
-
-            orderDAO.insertMany(orders);
-
-            lblStatus.setText(
-                    "Status: Insert orders successfully!"
-            );
-
-            readAllOrders();
-
-        } catch (Exception ex) {
-
-            showError(ex);
-        }
-    }
-
-
-    // =========================================================
-    // CREATE SAMPLE DATA
-    // =========================================================
-
-    private List<Document> createSampleOrders() {
+    private Document createSampleOrder() {
 
         Document product1 =
                 new Document()
@@ -403,131 +476,105 @@ public class OrderManagementUI extends JFrame {
                         );
 
 
-        Document product3 =
-                new Document()
-                        .append(
-                                "product_id",
-                                "jean"
+        return new Document()
+                .append(
+                        "orderId",
+                        1
+                )
+                .append(
+                        "products",
+                        Arrays.asList(
+                                product1,
+                                product2
                         )
-                        .append(
-                                "product_name",
-                                "quan jean"
-                        )
-                        .append(
-                                "size",
-                                "L"
-                        )
-                        .append(
-                                "price",
-                                20.0
-                        )
-                        .append(
-                                "quantity",
-                                1
-                        );
-
-
-        Document product4 =
-                new Document()
-                        .append(
-                                "product_id",
-                                "somi"
-                        )
-                        .append(
-                                "product_name",
-                                "ao so mi"
-                        )
-                        .append(
-                                "size",
-                                "M"
-                        )
-                        .append(
-                                "price",
-                                10.5
-                        )
-                        .append(
-                                "quantity",
-                                3
-                        );
-
-
-        Document order1 =
-                new Document()
-                        .append(
-                                "orderId",
-                                1
-                        )
-                        .append(
-                                "products",
-                                Arrays.asList(
-                                        product1,
-                                        product2
-                                )
-                        )
-                        .append(
-                                "total_amount",
-                                31.0
-                        )
-                        .append(
-                                "delivery_address",
-                                "Hanoi"
-                        );
-
-
-        Document order2 =
-                new Document()
-                        .append(
-                                "orderId",
-                                2
-                        )
-                        .append(
-                                "products",
-                                Arrays.asList(
-                                        product3
-                                )
-                        )
-                        .append(
-                                "total_amount",
-                                20.0
-                        )
-                        .append(
-                                "delivery_address",
-                                "Haiphong"
-                        );
-
-
-        Document order3 =
-                new Document()
-                        .append(
-                                "orderId",
-                                3
-                        )
-                        .append(
-                                "products",
-                                Arrays.asList(
-                                        product4
-                                )
-                        )
-                        .append(
-                                "total_amount",
-                                31.5
-                        )
-                        .append(
-                                "delivery_address",
-                                "Danang"
-                        );
-
-
-        return Arrays.asList(
-                order1,
-                order2,
-                order3
-        );
+                )
+                .append(
+                        "total_amount",
+                        31.0
+                )
+                .append(
+                        "delivery_address",
+                        "Hanoi"
+                );
     }
 
 
     // =========================================================
-    // UPDATE ADDRESS
+    // INSERT MANY
+    // =========================================================
+
+    private void insertMany() {
+
+        try {
+
+            int orderId = 1;
+
+
+            // Prevent duplicate order
+
+            if (
+                    orderDAO.orderExists(
+                            orderId
+                    )
+            ) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Order ID 1 already exists!",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+
+                lblStatus.setText(
+                        "Status: Order already exists!"
+                );
+
+
+                return;
+            }
+
+
+            Document order =
+                    createSampleOrder();
+
+
+            List<Document> orders =
+                    List.of(
+                            order
+                    );
+
+
+            orderDAO.insertMany(
+                    orders
+            );
+
+
+            lblStatus.setText(
+                    "Status: Insert successfully!"
+            );
+
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Insert order successfully!",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+
+            readOrders();
+
+
+        } catch (Exception ex) {
+
+            showError(ex);
+        }
+    }
+
+
+    // =========================================================
+    // UPDATE DELIVERY ADDRESS
     // =========================================================
 
     private void updateAddress() {
@@ -535,98 +582,121 @@ public class OrderManagementUI extends JFrame {
         try {
 
             int orderId =
-                    Integer.parseInt(
-                            txtOrderId.getText()
-                    );
-
-            String address =
-                    txtAddress.getText().trim();
+                    getOrderId();
 
 
-            if (address.isEmpty()) {
+            String newAddress =
+                    txtAddress
+                            .getText()
+                            .trim();
+
+
+            if (
+                    newAddress.isEmpty()
+            ) {
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Please enter delivery address.",
+                        "Please enter new delivery address!",
                         "Warning",
                         JOptionPane.WARNING_MESSAGE
                 );
+
 
                 return;
             }
 
 
             boolean success =
-                    orderDAO.updateDeliveryAddress(
-                            orderId,
-                            address
-                    );
+                    orderDAO
+                            .updateDeliveryAddress(
+                                    orderId,
+                                    newAddress
+                            );
 
 
             if (success) {
 
                 lblStatus.setText(
-                        "Status: Update address successfully!"
+                        "Status: Address updated!"
                 );
+
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Delivery address updated.",
+                        "Delivery address updated successfully!",
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE
                 );
 
+
+                // Read again from MongoDB
+
+                readOrders();
+
+
             } else {
+
+                lblStatus.setText(
+                        "Status: Order not found!"
+                );
+
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Order ID not found.",
+                        "Order ID "
+                                + orderId
+                                + " not found!",
                         "Warning",
                         JOptionPane.WARNING_MESSAGE
                 );
             }
 
 
-            readAllOrders();
-
         } catch (NumberFormatException ex) {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Order ID must be a number.",
+                    "Order ID must be a number!",
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
+
+
+        } catch (Exception ex) {
+
+            showError(ex);
         }
     }
 
 
     // =========================================================
-    // DELETE
+    // REMOVE ORDER
     // =========================================================
 
-    private void deleteOrder() {
+    private void removeOrder() {
 
         try {
 
             int orderId =
-                    Integer.parseInt(
-                            txtOrderId.getText()
-                    );
+                    getOrderId();
 
 
-            int choice =
+            int confirm =
                     JOptionPane.showConfirmDialog(
                             this,
-                            "Delete Order ID = "
+                            "Do you want to remove Order ID "
                                     + orderId
                                     + "?",
-                            "Confirm Delete",
+                            "Confirm Remove",
                             JOptionPane.YES_NO_OPTION
                     );
 
 
-            if (choice != JOptionPane.YES_OPTION) {
+            if (
+                    confirm
+                            != JOptionPane.YES_OPTION
+            ) {
 
                 return;
             }
@@ -641,57 +711,82 @@ public class OrderManagementUI extends JFrame {
             if (success) {
 
                 lblStatus.setText(
-                        "Status: Delete order successfully!"
+                        "Status: Order removed!"
                 );
 
-            } else {
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Order ID not found.",
+                        "Order removed successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+
+                // Read again from MongoDB
+
+                readOrders();
+
+
+            } else {
+
+                lblStatus.setText(
+                        "Status: Order not found!"
+                );
+
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Order ID "
+                                + orderId
+                                + " not found!",
                         "Warning",
                         JOptionPane.WARNING_MESSAGE
                 );
             }
 
 
-            readAllOrders();
-
         } catch (NumberFormatException ex) {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Order ID must be a number.",
+                    "Order ID must be a number!",
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
+
+
+        } catch (Exception ex) {
+
+            showError(ex);
         }
     }
 
 
     // =========================================================
-    // READ
+    // READ ALL ORDERS
     // =========================================================
 
-    private void readAllOrders() {
+    private void readOrders() {
 
         try {
 
-            tableModel.setRowCount(0);
+            tableModel.setRowCount(
+                    0
+            );
+
 
             List<Document> orders =
                     orderDAO.findAll();
 
+
             int no = 1;
 
 
-            for (Document order : orders) {
-
-                int orderId =
-                        order.getInteger(
-                                "orderId"
-                        );
-
+            for (
+                    Document order :
+                    orders
+            ) {
 
                 List<Document> products =
                         order.getList(
@@ -706,32 +801,42 @@ public class OrderManagementUI extends JFrame {
                 }
 
 
-                for (Document product : products) {
-
-                    String productId =
-                            product.getString(
-                                    "product_id"
-                            );
+                for (
+                        Document product :
+                        products
+                ) {
 
                     String productName =
                             product.getString(
                                     "product_name"
                             );
 
-                    String size =
-                            product.getString(
-                                    "size"
+
+                    Number priceNumber =
+                            product.get(
+                                    "price",
+                                    Number.class
                             );
+
+
+                    Number quantityNumber =
+                            product.get(
+                                    "quantity",
+                                    Number.class
+                            );
+
 
                     double price =
-                            product.getDouble(
-                                    "price"
-                            );
+                            priceNumber == null
+                                    ? 0
+                                    : priceNumber.doubleValue();
+
 
                     int quantity =
-                            product.getInteger(
-                                    "quantity"
-                            );
+                            quantityNumber == null
+                                    ? 0
+                                    : quantityNumber.intValue();
+
 
                     double total =
                             price * quantity;
@@ -739,23 +844,35 @@ public class OrderManagementUI extends JFrame {
 
                     tableModel.addRow(
                             new Object[]{
-                                    no++,
-                                    orderId,
-                                    productId,
+
+                                    no,
+
                                     productName,
-                                    size,
-                                    price,
+
+                                    String.format(
+                                            "%.2f",
+                                            price
+                                    ),
+
                                     quantity,
-                                    total
+
+                                    String.format(
+                                            "%.2f",
+                                            total
+                                    )
                             }
                     );
+
+
+                    no++;
                 }
             }
 
 
             lblStatus.setText(
-                    "Status: Read all orders successfully!"
+                    "Status: Read orders successfully!"
             );
+
 
         } catch (Exception ex) {
 
@@ -765,7 +882,7 @@ public class OrderManagementUI extends JFrame {
 
 
     // =========================================================
-    // CALCULATE TOTAL
+    // CALCULATE TOTAL AMOUNT
     // =========================================================
 
     private void calculateTotal() {
@@ -776,36 +893,66 @@ public class OrderManagementUI extends JFrame {
                     orderDAO.findAll();
 
 
-            StringBuilder result =
+            if (
+                    orders.isEmpty()
+            ) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No order found!",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+
+                return;
+            }
+
+
+            StringBuilder message =
                     new StringBuilder();
 
 
             double grandTotal = 0;
 
 
-            for (Document order : orders) {
+            for (
+                    Document order :
+                    orders
+            ) {
+
+                Number orderIdNumber =
+                        order.get(
+                                "orderId",
+                                Number.class
+                        );
+
 
                 int orderId =
-                        order.getInteger(
-                                "orderId"
-                        );
+                        orderIdNumber == null
+                                ? 0
+                                : orderIdNumber.intValue();
 
 
                 double total =
-                        orderDAO.calculateTotalAmount(
-                                order
-                        );
+                        orderDAO
+                                .calculateTotalAmount(
+                                        order
+                                );
 
 
                 grandTotal += total;
 
 
-                result.append(
+                message
+                        .append(
                                 "Order ID: "
                         )
-                        .append(orderId)
                         .append(
-                                " | Total: "
+                                orderId
+                        )
+                        .append(
+                                " | Total amount: "
                         )
                         .append(
                                 String.format(
@@ -813,12 +960,15 @@ public class OrderManagementUI extends JFrame {
                                         total
                                 )
                         )
-                        .append("\n");
+                        .append(
+                                "\n"
+                        );
             }
 
 
-            result.append(
-                            "\nGrand Total: "
+            message
+                    .append(
+                            "\nTotal amount: "
                     )
                     .append(
                             String.format(
@@ -830,8 +980,8 @@ public class OrderManagementUI extends JFrame {
 
             JOptionPane.showMessageDialog(
                     this,
-                    result.toString(),
-                    "Calculate Total",
+                    message.toString(),
+                    "Calculate Total Amount",
                     JOptionPane.INFORMATION_MESSAGE
             );
 
@@ -840,6 +990,7 @@ public class OrderManagementUI extends JFrame {
                     "Status: Calculate total successfully!"
             );
 
+
         } catch (Exception ex) {
 
             showError(ex);
@@ -848,29 +999,30 @@ public class OrderManagementUI extends JFrame {
 
 
     // =========================================================
-    // FIND SOMI
+    // COUNT SOMI
     // =========================================================
 
-    private void calculateSomi() {
+    private void countSomi() {
 
         try {
 
             int total =
-                    orderDAO.calculateTotalSomi();
+                    orderDAO.countSomi();
 
 
             JOptionPane.showMessageDialog(
                     this,
                     "Total quantity of product_id = somi: "
                             + total,
-                    "Find SOMI",
+                    "Count SOMI",
                     JOptionPane.INFORMATION_MESSAGE
             );
 
 
             lblStatus.setText(
-                    "Status: Find SOMI successfully!"
+                    "Status: Count SOMI successfully!"
             );
+
 
         } catch (Exception ex) {
 
@@ -880,67 +1032,42 @@ public class OrderManagementUI extends JFrame {
 
 
     // =========================================================
-    // CLEAR COLLECTION
+    // GET ORDER ID
     // =========================================================
 
-    private void clearCollection() {
+    private int getOrderId()
+            throws NumberFormatException {
 
-        int choice =
-                JOptionPane.showConfirmDialog(
-                        this,
-                        "Delete all orders?",
-                        "Confirm",
-                        JOptionPane.YES_NO_OPTION
-                );
+        String text =
+                txtOrderId
+                        .getText()
+                        .trim();
 
 
-        if (choice != JOptionPane.YES_OPTION) {
+        if (
+                text.isEmpty()
+        ) {
 
-            return;
+            throw new NumberFormatException();
         }
 
 
-        orderDAO.clearCollection();
-
-        tableModel.setRowCount(0);
-
-        lblStatus.setText(
-                "Status: Collection cleared!"
+        return Integer.parseInt(
+                text
         );
     }
 
 
     // =========================================================
-    // EXIT
+    // SHOW ERROR
     // =========================================================
 
-    private void exitApplication() {
-
-        int choice =
-                JOptionPane.showConfirmDialog(
-                        this,
-                        "Do you want to exit?",
-                        "Exit",
-                        JOptionPane.YES_NO_OPTION
-                );
-
-
-        if (choice == JOptionPane.YES_OPTION) {
-
-            dispose();
-
-            System.exit(0);
-        }
-    }
-
-
-    // =========================================================
-    // ERROR
-    // =========================================================
-
-    private void showError(Exception ex) {
+    private void showError(
+            Exception ex
+    ) {
 
         ex.printStackTrace();
+
 
         JOptionPane.showMessageDialog(
                 this,
